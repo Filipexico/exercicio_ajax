@@ -7,18 +7,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const followingElement = document.querySelector('#following');
     const linkElement = document.querySelector('#link');
 
-    fetch('https://api.github.com/users/Filipexico')
-    .then(function(res) {
-        return res.json();
-    })
-    .then(function(json) {
-        nameElement.innerText = json.name;
-        usernameElement.innerText = json.login;
-        avatarElement.src = json.avatar_url;
-        followingElement.innerText = json.following;
-        followersElement.innerText = json.followers;
-        repositorioElement.innerText = json.public_repos;
-        linkElement.href = json.html_url;
+    async function fetchUserData() {
+        try {
+            const response = await fetch('https://api.github.com/users/Filipexico');
+            if (!response.ok) {
+                throw new Error('User not found');
+            }
+            const json = await response.json();
+            nameElement.innerText = json.name;
+            usernameElement.innerText = json.login;
+            avatarElement.src = json.avatar_url;
+            followingElement.innerText = json.following;
+            followersElement.innerText = json.followers;
+            repositorioElement.innerText = json.public_repos;
+            linkElement.href = json.html_url;
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            nameElement.innerText = 'Erro ao carregar dados do usuário';
+        }
+    }
 
-    })
-})
+    fetchUserData();
+});
